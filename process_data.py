@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 
 # load data
 fake = pd.read_csv("../news/Fake.csv")
@@ -45,4 +45,23 @@ dataset = dataset[["id", "label", "throwaway", "text"]]
 # Prepare tsv files and splits
 # train & dev tsv should look like ( id, label, throw, text)
 # test tsv = (id, text)
+
+split_one = dataset.sample(frac=0.9, random_state=41)
+test = dataset.drop(split_one.index)
+
+train = split_one.sample(frac=0.9, random_state=41)
+dev = split_one.drop(train.index)
+
+# Train = 36367 ish samples
+# Dev = 4041 ish samples
+# test = 4490 ish samples
+
+# drop label and throw columns from test
+test = test.drop(["label", "throwaway"], axis=1)
+
+# create one tsv file for each split
+
+train.to_csv('train.tsv', sep='\t', index=False, header=False)
+dev.to_csv('dev.tsv', sep='\t', index=False, header=False)
+test.to_csv('test.tsv', sep='\t', index=False, header=False)
 
